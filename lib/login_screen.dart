@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'api_service.dart';
 import 'home_screen.dart';
+import 'services/api_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -12,7 +12,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  final _emailController = TextEditingController();
+  final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
 
   bool _isLoading = false;
@@ -20,7 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _usernameController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -34,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       final response = await ApiService.login(
-        _emailController.text.trim(),
+        _usernameController.text.trim(),
         _passwordController.text,
       );
 
@@ -44,18 +44,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (_) => HomeScreen(userName: userName),
-        ),
+        MaterialPageRoute(builder: (_) => const HomeScreen()),
       );
     } catch (e) {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            e.toString().replaceAll('Exception: ', ''),
-          ),
+          content: Text(e.toString().replaceAll('Exception: ', '')),
           backgroundColor: Colors.redAccent,
           behavior: SnackBarBehavior.floating,
           margin: const EdgeInsets.all(16),
@@ -85,16 +81,11 @@ class _LoginScreenState extends State<LoginScreen> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF7B1596),
-              Color(0xFF4A1268),
-              Color(0xFF24123D),
-            ],
+            colors: [Color(0xFF7B1596), Color(0xFF4A1268), Color(0xFF24123D)],
           ),
         ),
         child: Stack(
           children: [
-            // Decorative purple circle - top right
             Positioned(
               top: -100,
               right: -80,
@@ -107,8 +98,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
-
-            // Decorative circle - bottom left
             Positioned(
               bottom: -120,
               left: -100,
@@ -121,44 +110,28 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
-
-            // Small decorative stars
             const Positioned(
               top: 100,
               left: 35,
-              child: Icon(
-                Icons.star,
-                color: Colors.white54,
-                size: 16,
-              ),
+              child: Icon(Icons.star, color: Colors.white54, size: 16),
             ),
-
             const Positioned(
               top: 180,
               right: 35,
-              child: Icon(
-                Icons.star,
-                color: Colors.white38,
-                size: 13,
-              ),
+              child: Icon(Icons.star, color: Colors.white38, size: 13),
             ),
-
             const Positioned(
               bottom: 180,
               left: 45,
-              child: Icon(
-                Icons.star,
-                color: Colors.white38,
-                size: 12,
-              ),
+              child: Icon(Icons.star, color: Colors.white38, size: 12),
             ),
-
             SafeArea(
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
-                    minHeight: size.height -
+                    minHeight:
+                        size.height -
                         MediaQuery.of(context).padding.top -
                         MediaQuery.of(context).padding.bottom,
                   ),
@@ -170,17 +143,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Column(
                       children: [
                         const SizedBox(height: 15),
-
                         Container(
                           width: 135,
                           height: 135,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: Colors.white,
-                            border: Border.all(
-                              color: Colors.white,
-                              width: 7,
-                            ),
+                            border: Border.all(color: Colors.white, width: 7),
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.black.withOpacity(0.25),
@@ -204,9 +173,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                         ),
-
                         const SizedBox(height: 22),
-
                         RichText(
                           textAlign: TextAlign.center,
                           text: const TextSpan(
@@ -230,9 +197,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ],
                           ),
                         ),
-
                         const SizedBox(height: 8),
-
                         const Text(
                           'Welcome back, Programmer!',
                           textAlign: TextAlign.center,
@@ -242,9 +207,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             fontWeight: FontWeight.w400,
                           ),
                         ),
-
                         const SizedBox(height: 30),
-
                         Container(
                           width: double.infinity,
                           padding: const EdgeInsets.all(24),
@@ -272,9 +235,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     fontWeight: FontWeight.w800,
                                   ),
                                 ),
-
                                 const SizedBox(height: 7),
-
                                 const Text(
                                   'Continue your journey with Jupiter Academy',
                                   style: TextStyle(
@@ -282,60 +243,52 @@ class _LoginScreenState extends State<LoginScreen> {
                                     fontSize: 13,
                                   ),
                                 ),
-
                                 const SizedBox(height: 25),
-
-                                // EMAIL
                                 const Text(
-                                  'Email Address',
+                                  'Username',
                                   style: TextStyle(
                                     color: Color(0xFF4B3A51),
                                     fontSize: 13,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
-
                                 const SizedBox(height: 8),
-
                                 TextFormField(
-                                  controller: _emailController,
-                                  keyboardType:
-                                      TextInputType.emailAddress,
+                                  controller: _usernameController,
+                                  keyboardType: TextInputType.text,
                                   textInputAction: TextInputAction.next,
+                                  textCapitalization: TextCapitalization.none,
+                                  autocorrect: false,
                                   style: const TextStyle(
                                     color: Color(0xFF34243B),
                                   ),
                                   decoration: InputDecoration(
-                                    hintText: 'Enter your email',
+                                    hintText: 'Enter your username',
                                     hintStyle: const TextStyle(
                                       color: Color(0xFFAAA1AE),
                                     ),
                                     prefixIcon: const Icon(
-                                      Icons.email_outlined,
+                                      Icons.person_outline,
                                       color: Color(0xFF9C18B7),
                                     ),
                                     filled: true,
                                     fillColor: const Color(0xFFF8F4FA),
-                                    contentPadding:
-                                        const EdgeInsets.symmetric(
+                                    contentPadding: const EdgeInsets.symmetric(
                                       vertical: 17,
                                       horizontal: 16,
                                     ),
                                     border: OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(14),
+                                      borderRadius: BorderRadius.circular(14),
                                       borderSide: BorderSide.none,
                                     ),
                                     enabledBorder: OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(14),
+                                      borderRadius: BorderRadius.circular(14),
                                       borderSide: const BorderSide(
                                         color: Color(0xFFE8DFEB),
                                       ),
                                     ),
                                     focusedBorder: OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(14),
+                                      borderRadius: BorderRadius.circular(14),
                                       borderSide: const BorderSide(
                                         color: Color(0xFFA719C5),
                                         width: 2,
@@ -343,22 +296,18 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                   ),
                                   validator: (value) {
-                                    if (value == null ||
-                                        value.trim().isEmpty) {
-                                      return 'Please enter your email';
+                                    if (value == null || value.trim().isEmpty) {
+                                      return 'Please enter your username';
                                     }
 
-                                    if (!value.contains('@')) {
-                                      return 'Enter a valid email address';
+                                    if (value.trim().length < 3) {
+                                      return 'Username must be at least 3 characters';
                                     }
 
                                     return null;
                                   },
                                 ),
-
                                 const SizedBox(height: 20),
-
-                                // PASSWORD
                                 const Text(
                                   'Password',
                                   style: TextStyle(
@@ -367,9 +316,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
-
                                 const SizedBox(height: 8),
-
                                 TextFormField(
                                   controller: _passwordController,
                                   obscureText: _obscurePassword,
@@ -394,8 +341,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     suffixIcon: IconButton(
                                       onPressed: () {
                                         setState(() {
-                                          _obscurePassword =
-                                              !_obscurePassword;
+                                          _obscurePassword = !_obscurePassword;
                                         });
                                       },
                                       icon: Icon(
@@ -407,26 +353,22 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                     filled: true,
                                     fillColor: const Color(0xFFF8F4FA),
-                                    contentPadding:
-                                        const EdgeInsets.symmetric(
+                                    contentPadding: const EdgeInsets.symmetric(
                                       vertical: 17,
                                       horizontal: 16,
                                     ),
                                     border: OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(14),
+                                      borderRadius: BorderRadius.circular(14),
                                       borderSide: BorderSide.none,
                                     ),
                                     enabledBorder: OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(14),
+                                      borderRadius: BorderRadius.circular(14),
                                       borderSide: const BorderSide(
                                         color: Color(0xFFE8DFEB),
                                       ),
                                     ),
                                     focusedBorder: OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(14),
+                                      borderRadius: BorderRadius.circular(14),
                                       borderSide: const BorderSide(
                                         color: Color(0xFFA719C5),
                                         width: 2,
@@ -434,8 +376,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                   ),
                                   validator: (value) {
-                                    if (value == null ||
-                                        value.isEmpty) {
+                                    if (value == null || value.isEmpty) {
                                       return 'Please enter your password';
                                     }
 
@@ -446,37 +387,28 @@ class _LoginScreenState extends State<LoginScreen> {
                                     return null;
                                   },
                                 ),
-
                                 const SizedBox(height: 28),
-
-                                // ------------------------------------------------
-                                // LOGIN BUTTON
-                                // ------------------------------------------------
                                 SizedBox(
                                   width: double.infinity,
                                   height: 55,
                                   child: ElevatedButton(
-                                    onPressed:
-                                        _isLoading ? null : _handleLogin,
+                                    onPressed: _isLoading ? null : _handleLogin,
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          const Color(0xFFA90FC2),
-                                      disabledBackgroundColor:
-                                          const Color(0xFFCC83D7),
+                                      backgroundColor: const Color(0xFFA90FC2),
+                                      disabledBackgroundColor: const Color(
+                                        0xFFCC83D7,
+                                      ),
                                       elevation: 5,
-                                      shadowColor:
-                                          const Color(0xFF8E159F),
+                                      shadowColor: const Color(0xFF8E159F),
                                       shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(15),
+                                        borderRadius: BorderRadius.circular(15),
                                       ),
                                     ),
                                     child: _isLoading
                                         ? const SizedBox(
                                             height: 24,
                                             width: 24,
-                                            child:
-                                                CircularProgressIndicator(
+                                            child: CircularProgressIndicator(
                                               color: Colors.white,
                                               strokeWidth: 2.5,
                                             ),
@@ -490,8 +422,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 16,
-                                                  fontWeight:
-                                                      FontWeight.w700,
+                                                  fontWeight: FontWeight.w700,
                                                 ),
                                               ),
                                               SizedBox(width: 10),
@@ -508,9 +439,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                         ),
-
                         const SizedBox(height: 25),
-
                         const Text(
                           'Jupiter Academy • Explore • Learn • Create',
                           textAlign: TextAlign.center,
@@ -520,7 +449,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             letterSpacing: 0.5,
                           ),
                         ),
-
                         const SizedBox(height: 10),
                       ],
                     ),
